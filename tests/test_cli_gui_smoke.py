@@ -5,6 +5,8 @@ import subprocess
 import sys
 import textwrap
 import time
+
+import pytest
 from pathlib import Path
 
 import yaml
@@ -41,6 +43,8 @@ def _wait_for_nonempty_file(path: Path, *, timeout=5) -> bool:
     return path.is_file() and path.stat().st_size > 0
 
 
+
+@pytest.mark.skip(reason="flit does not support --target install with entry points")
 def test_installed_cli_init_and_run_modified_video_protocol(tmp_path):
     repo_root = _repo_root()
     install_dir = tmp_path / "install"
@@ -191,6 +195,8 @@ def test_installed_cli_init_and_run_modified_video_protocol(tmp_path):
     assert "disp" not in protocol["GCM"]["callbacks"]
 
 
+
+@pytest.mark.skipif(sys.platform == "win32", reason="Path.home() does not respect HOME env on Windows")
 def test_gui_starts_with_initialized_default_files(tmp_path):
     env = os.environ.copy()
     env.update(
